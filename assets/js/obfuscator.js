@@ -1,165 +1,123 @@
-// vars
-let copy = document.getElementById("copy");
-let input = document.getElementById("input");
-let output = document.getElementById("output");
-let minified = document.getElementById("minified");
-let obfuscate = document.getElementById("obfuscate");
-let result = document.getElementById("result");
-let addon = document.getElementById("addon");
+var $jscomp = $jscomp || {};
+$jscomp.scope = {};
+$jscomp.createTemplateTagFirstArg = function(a) {
+    return a.raw = a
+};
+$jscomp.createTemplateTagFirstArgWithRaw = function(a, b) {
+    a.raw = b;
+    return a
+};
+$jscomp.arrayIteratorImpl = function(a) {
+    var b = 0;
+    return function() {
+        return b < a.length ? {
+            done: !1,
+            value: a[b++]
+        } : {
+            done: !0
+        }
+    }
+};
+$jscomp.arrayIterator = function(a) {
+    return {
+        next: $jscomp.arrayIteratorImpl(a)
+    }
+};
+$jscomp.makeIterator = function(a) {
+    var b = "undefined" != typeof Symbol && Symbol.iterator && a[Symbol.iterator];
+    return b ? b.call(a) : $jscomp.arrayIterator(a)
+};
+var copy = document.getElementById("copy"),
+    input = document.getElementById("input"),
+    output = document.getElementById("output"),
+    minified = document.getElementById("minified"),
+    obfuscate = document.getElementById("obfuscate"),
+    result = document.getElementById("result"),
+    addon = document.getElementById("addon");
 
 function obfaddon() {
-  if (addon.files.length > 0) {
-    input.disabled = true;
-
-    // setup ZIP
-    var zip = new JSZip;
-    let files = addon.files;
-
-    for (let file of files) {
-      let filename = file.name;
-      console.log(filename);
-    }
-  } else {
-    input.disabled = false;
-  };
-};
+    if (0 < addon.files.length) {
+        input.disabled = !0;
+        new JSZip;
+        for (var a = $jscomp.makeIterator(addon.files), b = a.next(); !b.done; b = a.next()) console.log(b.value.name)
+    } else input.disabled = !1
+}
 
 function obf() {
-  if (input.value !== "") {
-    obfuscate.disabled = false;
-    result.style.display = "block";
-  } else {
-    obfuscate.disabled = true;
-    result.style.display = "none";
-  };
-};
+    "" !== input.value ? (obfuscate.disabled = !1, result.style.display = "block") : (obfuscate.disabled = !0, result.style.display = "none")
+}
 obf();
-
 obfuscate.onclick = function() {
-	if (input.value) {
-		obfuscateMain();
-	} else {}
+    input.value && obfuscateMain()
 };
 
 function obfuscateMain() {
-  let one_arg = String(input.value).match(/\"[^"]*"|'[^']*'/g);
-  if (Array.isArray(one_arg)) {
-    window.alert("Note! This process may take long according to your JSON file size! Be wise about its usage.");
-    let result = String(input.value);
-    let pre_result = "";
-    let index = 0;
-    while (index < one_arg.length) {
-      result = result.replace((one_arg[index].replace("\"", "").replace("\"", "")), `${unicodeEscape(one_arg[index].replace("\"", "").replace("\"", ""))}`);
-      index++;
+    var a = String(input.value).match(/"[^"]*"|'[^']*'/g);
+    if (Array.isArray(a)) {
+        window.alert("Note! This process may take long according to your JSON file size! Be wise about its usage.");
+        for (var b = String(input.value), c = "", d = 0; d < a.length;) b = b.replace(a[d].replace('"', "").replace('"', ""), "" + unicodeEscape(a[d].replace('"', "").replace('"', ""))), d++;
+        c = b;
+        window.setTimeout(function() {
+            output.value = c;
+            if (!0 === minified.checked) {
+                var g = JSON.minify(output.value);
+                output.value = g
+            } else console.log(input.value)
+        })
     }
-    pre_result = result;
-    window.setTimeout(() => {
-      output.value = (pre_result);
-      if (minified.checked === true) {
-        let result = JSON.minify(output.value);
-        output.value = result;
-      } else {
-        console.log(input.value);
-      }
-    });
-  } else {
-
-  }
-};
-
+}
 copy.onclick = function() {
-  output.select();
-  output.setSelectionRange(0, output.value.length);
-  document.execCommand("copy");
+    output.select();
+    output.setSelectionRange(0, output.value.length);
+    document.execCommand("copy")
 };
-
-// Unicode Escaoe Code. #0753
-let unicodeEscape = (str) => {
-  let result = "";
-  for (let index = 0, charCode; !isNaN(charCode = str.charCodeAt(index++));) {
-    result += "\\u" + ("0000" + charCode.toString(16)).slice(-4);
-  }
-  return result;
+var unicodeEscape = function(a) {
+    for (var b = "", c = 0, d; !isNaN(d = a.charCodeAt(c++));) b += "\\u" + ("0000" + d.toString(16)).slice(-4);
+    return b
 };
-
-
-// JSON.minify()
-(function(window) {
-  var JSON = this.JSON;
-
-  // Create the global JSON object if it doesn't exist.
-  if (Object(JSON) !== JSON) JSON = this.JSON = {};
-
-  JSON.minify = function(source) {
-    var index = 0,
-      length = source.length,
-      result = "",
-      symbol,
-      position;
-
-    while (index < length) {
-      symbol = source.charAt(index);
-
-      switch (symbol) {
-        // Ignore whitespace tokens. According to ES 5.1 section 15.12.1.1,
-        // whitespace tokens include tabs, carriage returns, line feeds, and
-        // space characters.
-        case "\t":
-        case "\r":
-        case "\n":
-        case " ":
-          index += 1;
-          break;
-          // Ignore line and block comments.
-        case "/":
-          symbol = source.charAt(index += 1);
-          switch (symbol) {
-            // Line comments.
-            case "/":
-              position = source.indexOf("\n", index);
-              if (position < 0) {
-                // Check for CR-style line endings.
-                position = source.indexOf("\r", index);
-              }
-              index = position > -1 ? position : length;
-              break;
-              // Block comments.
-            case "*":
-              position = source.indexOf("*/", index);
-              if (position > -1) {
-                // Advance the scanner's position past the end of the comment.
-                index = position += 2;
+(function(a) {
+    a = this.JSON;
+    Object(a) !== a && (a = this.JSON = {});
+    a.minify = function(b) {
+        for (var c = 0, d = b.length, g = "", f, e; c < d;) switch (f = b.charAt(c), f) {
+            case "\t":
+            case "\r":
+            case "\n":
+            case " ":
+                c += 1;
                 break;
-              }
-              throw SyntaxError("Unterminated block comment.");
+            case "/":
+                f = b.charAt(c += 1);
+                switch (f) {
+                    case "/":
+                        e = b.indexOf("\n", c);
+                        0 > e && (e = b.indexOf("\r", c));
+                        c = -1 < e ? e : d;
+                        break;
+                    case "*":
+                        e = b.indexOf("*/", c);
+                        if (-1 < e) {
+                            c = e + 2;
+                            break
+                        }
+                        throw SyntaxError("Unterminated block comment.");
+                    default:
+                        throw SyntaxError("Invalid comment.");
+                }
+                break;
+            case '"':
+                for (e = c; c < d;)
+                    if (f = b.charAt(c += 1), "\\" == f) c +=
+                        1;
+                    else if ('"' == f) break;
+                if ('"' == b.charAt(c)) {
+                    g += b.slice(e, c += 1);
+                    break
+                }
+                throw SyntaxError("Unterminated string.");
             default:
-              throw SyntaxError("Invalid comment.");
-          }
-          break;
-          // Parse strings separately to ensure that any whitespace characters and
-          // JavaScript-style comments within them are preserved.
-        case '"':
-          position = index;
-          while (index < length) {
-            symbol = source.charAt(index += 1);
-            if (symbol == "\\") {
-              // Skip past escaped characters.
-              index += 1;
-            } else if (symbol == '"') {
-              break;
-            }
-          }
-          if (source.charAt(index) == '"') {
-            result += source.slice(position, index += 1);
-            break;
-          }
-          throw SyntaxError("Unterminated string.");
-          // Preserve all other characters.
-        default:
-          result += symbol;
-          index += 1;
-      }
+                g += f, c += 1
+        }
+        return g
     }
-    return result;
-  };
 }).call(this);
