@@ -43,7 +43,7 @@ select.onchange = function() {
 
 function main() {
     identifier.value ? ($("#entity").find("input, select, button").removeAttr("disabled"), spawnEggPanel.style.display = isSpawnable.checked ? "block" : "none") : ($("#entity").find("input, select, button").not("[name=identifier]").attr("disabled", "disabled"), spawnEggPanel.style.display = "none");
-    customBeh.style.display = baseBeh.checked ? "none" : "block"
+    // customBeh.style.display = baseBeh.checked ? "none" : "block"
 }
 main();
 
