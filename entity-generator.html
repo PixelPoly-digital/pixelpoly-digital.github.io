@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required Meta -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Primary Meta Tags -->
+        <title>Entity Generator | PixelPoly Digital</title>
+        <meta name="title" content="Entity Generator | PixelPoly Digital">
+        <meta name="description" content="Do you want to generate addon just from your model/texture file? This generator can help you! ">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://pixelpoly.co/tools/entity-generator">
+        <meta property="og:title" content="Entity Generator | PixelPoly Digital">
+        <meta property="og:description" content="Do you want to generate addon just from your model/texture file? This generator can help you! ">
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://pixelpoly.co/tools/entity-generator">
+        <meta property="twitter:title" content="Entity Generator | PixelPoly Digital">
+        <meta property="twitter:description" content="Do you want to generate addon just from your model/texture file? This generator can help you! ">
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+        <link rel="mask-icon" href="assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="msapplication-config" content="assets/images/favicon/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+        <!-- Stylesheets & Fonts -->
+        <link href="assets/css/plugins.css" rel="stylesheet">
+        <link href="assets/css/style.css" rel="stylesheet">
+        <script src="assets/js/lib/uuid_generator_class.js"></script>
+        <script src="assets/js/lib/filesaver.js"></script>
+	    <script src="assets/js/lib/jszip.js"></script> 
+    </head>
+    <body>
+        <!-- Body Inner -->
+        <div class="body-inner">
+            <section class="fullscreen p-t-0 m-t-0 bg-color">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 p-10 text-center">
+                            <h3 class="text-dark">Entity Generator for Minecraft Bedrock (Beta)</h3>
+                            <p class="text-bold m-t-0">Created by <a href="https://github.com/justash0005">JustAsh0005</a></p>
+                        </div>
+                        <div class="col-md-6 center background-white b-r-6 p-30">
+                            <div id="entity">
+                                <div class="form-group">
+                                    <h5 class="text-dark" for="pack.type">Generate:</h5>
+                                    <select id="pack.type" class="form-control">
+                                        <option selected value="both">Both (Behavior & Resource)</option>
+                                        <option value="res">Only Resource</option>
+                                        <option value="beh">Only Behavior</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <h5 class="text-dark" for="entity.identifier">Entity Identifier:</h5>
+                                    <input type="search" name="identifier" oninput="main();" id="entity.identifier" placeholder="custom:entity" class="form-control">
+                                </div>
+                                <h3 class="text-dark client">Entity resource</h3>
+                                <div class="form-group client">
+                                    <h5 class="text-dark" for="entity.texture_file">Select Entity Texture:</h5>
+                                    <input type="file" accept=".png" class="col-12" id="entity.texture_file">
+                                </div>
+                                <div class="form-group client">
+                                    <h5 class="text-dark" for="entity.model_file">Select Entity Model:</h5>
+                                    <input type="file" accept=".json" onchange="getGeo();" class="col-12" id="entity.model_file">
+                                </div>
+                                <div class="form-group client">
+                                    <h5 class="text-dark" for="entity.material">Entity Material:</h5>
+                                    <select id="entity.material" class="form-control">
+                                        <option selected>entity_alphatest</option>
+                                        <option>entity_alphablend</option>
+                                        <option>slime_outer</option>
+                                        <option>entity_static</option>
+                                        <option>alpha_block</option>
+                                        <option>spider</option>
+                                        <option>enderman</option>
+                                        <option>npc</option>
+                                        <option>phantom</option>
+                                        <option>entity_emissive</option>
+                                    </select>
+                                </div>
+                                <div class="client" id="entity.spawn_egg.panel">
+                                    <button id="entity.spawn_egg.show_panel" class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options">Configure spawn eggs</button>
+                                    <div class="collapse" id="options">
+                                        <div class="card card-body background-white">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <h5 class="text-dark p-l-15" for="entity.spawn_egg.overlay_color">Overlay color:</h5>
+                                                    <div class="col-12">
+                                                        <input class="form-control" type="color" value="#563d7c" id="entity.spawn_egg.overlay_color">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <h5 class="text-dark p-l-15" for="entity.spawn_egg.base_color">Base color:</h5>
+                                                    <div class="col-12">
+                                                        <input class="form-control" type="color" value="#21367c" id="entity.spawn_egg.base_color">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="text-dark server">Entity Behavior</h3>
+                                <div class="form-group server">
+                                    <div>
+                                        <h6 for="entity.is_summonable">Entity can be summoned using commands:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input checked class="form-check-input m-t-5" id="entity.is_summonable" type="checkbox"></h6>
+                                    </div>
+                                    <div>
+                                        <h6 for="entity.is_experimental">Is Experimental:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" id="entity.is_experimental" type="checkbox"></h6>
+                                    </div>
+                                    <div>
+                                        <h6 for="entity.is_spawnable">Entity can be spawned using spawn eggs:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input checked class="form-check-input m-t-5" oninput="main();" id="entity.is_spawnable" type="checkbox"></h6>
+                                    </div>
+                                    <div>
+                                        <h6 for="entity.basic_behaviors">Generate with basic behaviors:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="basic_behaviors" checked oninput="main();" class="form-check-input m-t-5" id="entity.basic_behaviors" type="checkbox"></h6>
+                                        <div id="entity.custom_behaviors" class="card card-body background-white server">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" id="collision_box">
+                                                            <h5 class="text-dark">Collision box:</h5>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="behavior.collision_box.height">Height</span>
+                                                                </div>
+                                                                <input type="number" id="behavior.collision_box.height" class="form-control" min="0.00000" placeholder="1.0" aria-describedby="behavior.collision_box.height">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="behavior.collision_box.width">Width</span>
+                                                                </div>
+                                                                <input type="number" id="behavior.collision_box.width" class="form-control" min="0.00000" placeholder="0.5" aria-describedby="behavior.collision_box.width">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group" id="scale">
+                                                            <h5 for="behavior.scale" class="text-dark">Scale:</h5>
+                                                            <input type="number" min="0" id="behavior.scale" class="form-control" placeholder="1.0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group" id="health">
+                                                            <h5 for="behavior.health" class="text-dark">Health:</h5>
+                                                            <input type="search" id="behavior.health" class="form-control" placeholder="20">
+                                                        </div>
+                                                        <div class="form-group" style="margin-bottom: 27px;">
+                                                            <h6 for="behavior.is_immune">Immune from every damage:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" id="behavior.is_immune" type="checkbox"></h6>
+                                                        </div>
+                                                        <div class="form-group" id="type_family">
+                                                            <h5 for="behavior.type_family" class="text-dark">Family Type:</h5>
+                                                            <input type="search" id="behavior.type_family" class="form-control" placeholder="mob">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <button class="btn btn-primary" id="entity.generate">Generate pack</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- manifest -->
+            <div class="modal fade" id="manifest-panel" tabindex="-1" role="modal" aria-labelledby="manifest-panel-label" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 id="manifest-panel-label">Setup manifest</h4>
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <h5 class="text-dark" for="manifest.pack_name">Pack Name:</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: Body Inner -->
+        <!-- Scroll top -->
+        <a id="scrollTop"><i class="icon-chevron-up"></i><i class="icon-chevron-up"></i></a>
+        <div id="sidepanel">
+            <a class="panel-trigger"><span class="panel-close-x"><i class="icon-settings"></i></span></a>
+            <div class="container">
+                <p class="text-center">Set website preferences and they will be stored for your next visit.</p>
+                <hr class="mb-4">
+                <h5 class="mb-1">Color Scheme</h5>
+                <p class="small text-muted mb-3">Select light or dark mode.</p>
+                <div class="d-flex mb-4">
+                    <a id="light-mode" class="btn btn-light"><i class="icon-sun"></i> Light Mode</a>
+                    <a id="dark-mode" class="btn btn-dark"><i class="icon-moon"></i> Dark Mode</a>
+                </div>
+            </div>
+        </div>
+        <!--Plugins-->
+        <script src="assets/js/jquery.js"></script>
+        <script src="assets/js/plugins.js"></script>
+        <script src="assets/js/functions.js"></script>
+        <script src="assets/js/entity.js"></script>
+        <style>.dark .text-dark { color:#DADADA !important;};.dark .bg-color { background-color: #23272A; }; .bg-color { background-color: #DADADA; };.dark .card {background-color: #111!important; border-color: #111!important;box-shadow: 0 0 35px 0 #2b2a2a;}.dark .background-white {background-color: #111!important;border: 1px solid rgb(34, 34, 34);box-shadow: 0 0 0px 0 #111;}</style>
+    </body>
+</html>
