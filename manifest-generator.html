@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required Meta -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Primary Meta Tags -->
+        <title>Manifest generator | PixelPoly Digital</title>
+        <meta name="title" content="Manifest generator | PixelPoly Digital">
+        <meta name="description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://tools.pixelpoly.co/manifest-generator">
+        <meta property="og:title" content="Manifest generator | PixelPoly Digital">
+        <meta property="og:description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://tools.pixelpoly.co/manifest-generator">
+        <meta property="twitter:title" content="Manifest generator | PixelPoly Digital">
+        <meta property="twitter:description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+        <link rel="mask-icon" href="assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="msapplication-config" content="assets/images/favicon/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+        <!-- Stylesheets & Fonts -->
+        <link href="assets/css/plugins.css" rel="stylesheet">
+        <link href="assets/css/style.css" rel="stylesheet">
+        <script src="assets/js/lib/uuid_generator_class.js"></script>
+    </head>
+    <body>
+        <!-- Body Inner -->
+        <div class="body-inner">
+            <section class="fullscreen p-t-0 m-t-0 bg-color">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 p-10 text-center">
+                            <h3 class="text-dark">Manifest generator for Minecraft Bedrock</h3>
+                            <p class="text-bold m-t-0">Created by <a href="https://github.com/justash0005">JustAsh0005</a> and <a href="https://github.com/ZamyArkreNendmed">Zarkmend_ZAN</a></p>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <div class="form-group">
+                                    <h5 class="text-dark" for="pack.type">Pack type:</h5>
+                                    <select oninput="writeManifest();" class="form-control" id="pack.type">
+                                        <option selected value="data">Behavior pack</option>
+                                        <option value="resources">Resource pack</option>
+                                        <option value="skin_pack">Skin pack</option>
+                                        <option value="dep">Resource & behavior pack (Dependent)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Soon
+                        <div class="col-md-4">
+                            <div>
+                                <div class="form-group">
+                                    <h5>&nbsp;</h5>
+                                    <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options"><i class="icon-settings"></i> Options</button>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-md-12">
+                            <div class="collapse" id="options">
+                                <div class="card card-body">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="seperator m-t-5 m-b-5"></div>
+                        <!-- pack -->
+                        <div class="col-md-12" id="pack.element" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="pack.name">Pack name:</h5>
+                                            <input oninput="writeManifest();" type="text" id="pack.name" placeholder="Name" class="form-control" >
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="pack.description">Pack description:</h5>
+                                            <input oninput="writeManifest();" type="text" id="pack.description" placeholder="Description" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="pack.min_engine_version">Min engine version:</h5>
+                                            <select oninput="writeManifest();" class="form-control" id="pack.min_engine_version">
+                                                <option selected value="[1, 16, 0]">1.16.0</option>
+                                                <option value="[1, 14, 0]">1.14.0</option>
+                                                <option value="[1, 13, 0]">1.13.0</option>
+                                                <option value="none">None</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <h6 for="pack.metadata.checkbox">Enable metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="pack.metadata.checkbox" type="checkbox"></h6>
+                                        </div>
+                                        <div class="form-group" id="pack.author.element" style="display: none;">
+                                            <h5 class="text-dark">Author info (Optional):</h5>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="pack.author.name" placeholder="Name" class="form-control">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="pack.author.url" placeholder="Website" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <div class="form-group">
+                                            <code>
+                                            <textarea spellcheck="false" readonly rows="15" id="pack.code" class="form-control shadow"></textarea>
+                                            </code>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-sm btn-success" id="pack.download">Download</button>
+                                            <button class="btn btn-sm btn-info" id="pack.copy">Copy to clipboard</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- dependant_pack -->
+                        <div class="col-md-12" id="dp.element" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6" id="dp.behavior_pack">
+                                    <div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="bp.dep.name">Behavior pack name:</h5>
+                                            <input oninput="writeManifest();" type="text" id="bp.dep.name" placeholder="Name" class="form-control" >
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="bp.dep.description">Behavior pack description:</h5>
+                                            <input oninput="writeManifest();" type="text" id="bp.dep.description" placeholder="Description" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="bp.dep.min_engine_version">Behavior pack min engine version:</h5>
+                                            <select oninput="writeManifest();" class="form-control" id="bp.dep.min_engine_version">
+                                                <option selected value="[1, 16, 0]">1.16.0</option>
+                                                <option value="[1, 14, 0]">1.14.0</option>
+                                                <option value="[1, 13, 0]">1.13.0</option>
+                                                <option value="none">None</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <h6 for="bp.dep.metadata.checkbox">Enable behavior pack metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="bp.dep.metadata.checkbox" type="checkbox"></h6>
+                                        </div>
+                                        <div class="form-group" id="bp.dep.author.element" style="display: none;">
+                                            <h5 class="text-dark">Author info (Optional):</h5>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="bp.dep.author.name" placeholder="Name" class="form-control">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="bp.dep.author.url" placeholder="Website" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <code>
+                                            <textarea spellcheck="false" readonly rows="15" id="bp.dep.code" class="form-control shadow"></textarea>
+                                            </code>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-sm btn-success" id="bp.dep.download">Download</button>
+                                            <button class="btn btn-sm btn-info" id="bp.dep.copy">Copy to clipboard</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="dp.resource_pack">
+                                    <div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="rp.dep.name">Resource pack name:</h5>
+                                            <input oninput="writeManifest();" type="text" id="rp.dep.name" placeholder="Name" class="form-control" >
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="rp.dep.description">Resource pack description:</h5>
+                                            <input oninput="writeManifest();" type="text" id="rp.dep.description" placeholder="Description" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="rp.dep.min_engine_version">Resource pack min engine version:</h5>
+                                            <select oninput="writeManifest();" class="form-control" id="rp.dep.min_engine_version">
+                                                <option selected value="[1, 16, 0]">1.16.0</option>
+                                                <option value="[1, 14, 0]">1.14.0</option>
+                                                <option value="[1, 13, 0]">1.13.0</option>
+                                                <option value="none">None</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <h6 for="rp.dep.metadata.checkbox">Enable resource pack metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="rp.dep.metadata.checkbox" type="checkbox"></h6>
+                                        </div>
+                                        <div class="form-group" id="rp.dep.author.element" style="display: none;">
+                                            <h5 class="text-dark">Author info (Optional):</h5>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="rp.dep.author.name" placeholder="Name" class="form-control">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" id="rp.dep.author.url" placeholder="Website" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <code>
+                                            <textarea spellcheck="false" readonly rows="15" id="rp.dep.code" class="form-control shadow"></textarea>
+                                            </code>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-sm btn-success" id="rp.dep.download">Download</button>
+                                            <button class="btn btn-sm btn-info" id="rp.dep.copy">Copy to clipboard</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- end: Body Inner -->
+        <!-- Scroll top -->
+        <a id="scrollTop"><i class="icon-chevron-up"></i><i class="icon-chevron-up"></i></a>
+        <div id="sidepanel">
+            <a class="panel-trigger"><span class="panel-close-x"><i class="icon-settings"></i></span></a>
+            <div class="container">
+                <p class="text-center">Set website preferences and they will be stored for your next visit.</p>
+                <hr class="mb-4">
+                <h5 class="mb-1">Color Scheme</h5>
+                <p class="small text-muted mb-3">Select light or dark mode.</p>
+                <div class="d-flex mb-4">
+                    <a id="light-mode" class="btn btn-light"><i class="icon-sun"></i> Light Mode</a>
+                    <a id="dark-mode" class="btn btn-dark"><i class="icon-moon"></i> Dark Mode</a>
+                </div>
+            </div>
+        </div>
+        <!--Plugins-->
+        <script src="../assets/js/jquery.js"></script>
+        <script src="../assets/js/plugins.js"></script>
+        <script src="../assets/js/functions.js"></script>
+        <script src="js/manifest.js?ver<%=DateTime.Now.Ticks.ToString()%>"></script>
+        <style>.dark .text-dark { color:#DADADA !important;};.dark .bg-color { background-color: #23272A; }; .bg-color { background-color: #DADADA; };.dark .card {background-color: #111!important; border-color: #111!important;box-shadow: 0 0 35px 0 #2b2a2a;}.dark .background-white {background-color: #111!important;}</style>
+    </body>
+</html>
