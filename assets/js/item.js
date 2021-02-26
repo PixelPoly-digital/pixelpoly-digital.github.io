@@ -118,7 +118,7 @@ function writeItem() {
 	useAnimCheckbox.checked ? (useAnim.disabled = !1, "none" !== useAnim.value &&
 		(a["minecraft:item"].components["minecraft:use_animation"] = useAnim.value)) : useAnim.disabled = !0;
 	"" !== useDuration.value && (a["minecraft:item"].components["minecraft:use_duration"] = parseFloat(useDuration.value));
-	stackedData.checked || (a["minecraft:item"].components["minecraft:stacked_by_data"] = stackedData.checked);
+	stackedData.checked && (a["minecraft:item"].components["minecraft:stacked_by_data"] = stackedData.checked);
 	handEquipped.checked && (a["minecraft:item"].components["minecraft:hand_equipped"] = handEquipped.checked);
 	destroyInC.checked || (a["minecraft:item"].components["minecraft:can_destroy_in_creative"] =
 		destroyInC.checked);
@@ -147,7 +147,7 @@ function writeItem() {
 	shouldDespawn.checked || (a["minecraft:item"].components["minecraft:should_despawn"] = shouldDespawn.checked);
 	mirroredArt.checked && (a["minecraft:item"].components["minecraft:mirrored_art"] = mirroredArt.checked);
 	projectileCheckbox.checked ? (projectilePanel.style.display = "block", a["minecraft:item"].components["minecraft:projectile"] = {}, "" !== projectileEntity.value && (a["minecraft:item"].components["minecraft:projectile"].projectile_entity = projectileEntity.value), "" !== projectilePower.value &&
-		(a["minecraft:item"].components["minecraft:projectile"].minimum_critical_power = parseFloat(projectilePower.value))) : projectilePanel.style.display = "none";
+		0 <= projectilePower.value && (a["minecraft:item"].components["minecraft:projectile"].minimum_critical_power = parseFloat(projectilePower.value))) : projectilePanel.style.display = "none";
 	dyeCheckbox.checked ? (dyePowder.disabled = !1, a["minecraft:item"].components["minecraft:dye_powder"] = {}, a["minecraft:item"].components["minecraft:dye_powder"].color = dyePowder.value) : dyePowder.disabled = !0;
 	throwableCheckbox.checked ? (throwablePanel.style.display = "block", a["minecraft:item"].components["minecraft:throwable"] = {}, a["minecraft:item"].components["minecraft:throwable"].do_swing_animation =
 		throwableSwing.checked, 0 <= throwableDraw.value && "" !== throwableDraw.value && (a["minecraft:item"].components["minecraft:throwable"].max_draw_duration = parseFloat(throwableDraw.value)), a["minecraft:item"].components["minecraft:throwable"].scale_power_by_draw_duration = throwablePower.checked) : throwablePanel.style.display = "none";
