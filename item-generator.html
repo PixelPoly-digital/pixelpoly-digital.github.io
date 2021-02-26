@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required Meta -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Primary Meta Tags -->
+        <title>Item generator | Creator tools</title>
+        <meta name="title" content="Item generator | Creator tools">
+        <meta name="description" content="Item generator for Minecraft bedrock, helps in creating custom items with your desired components. Note, this requires minecraft experimental features to work.">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://tools.pixelpoly.co/item-generator">
+        <meta property="og:title" content="Item generator | Creator tools">
+        <meta property="og:description" content="Item generator for Minecraft bedrock, helps in creating custom items with your desired components. Note, this requires minecraft experimental features to work.">
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://tools.pixelpoly.co/item-generator">
+        <meta property="twitter:title" content="Item generator | Creator tools">
+        <meta property="twitter:description" content="Item generator for Minecraft bedrock, helps in creating custom items with your desired components. Note, this requires minecraft experimental features to work.">
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+        <link rel="mask-icon" href="assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="msapplication-config" content="assets/images/favicon/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+        <!-- Stylesheets & Fonts -->
+        <link href="assets/css/plugins.css" rel="stylesheet">
+        <link href="assets/css/style.css" rel="stylesheet">
+        <script src="assets/js/lib/uuid_generator_class.js"></script>
+        <script src="assets/js/lib/filesaver.js"></script>
+	    <script src="assets/js/lib/jszip.js"></script> 
+    </head>
+    <body>
+        <!-- Body Inner -->
+        <div class="body-inner">
+            <section class="fullscreen p-t-0 m-t-0 bg-color">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 p-10 text-center">
+                            <h3 class="text-dark">Item generator for Minecraft Bedrock</h3>
+                            <p class="text-bold m-t-0">Created by <a href="https://github.com/justash0005">JustAsh0005</a> and <a href="https://github.com/ZamyArkreNendmed">Zarkmend_ZAN</a></p>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <div class="form-group">
+                                    <h5 class="text-dark" for="format_version">Format version:</h5>
+                                    <select class="form-control" id="format_version">
+                                        <option selected value="1.16.100">1.16.100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="seperator m-t-5 m-b-5"></div>
+                        <!-- pack -->
+                        <div class="col-md-12" id="item.element">
+                            <div class="row">
+                                <div id="item.settings" class="col-md-6 card card-body card p-40 background-white overflow-auto" style="max-height:390px;">
+                                    <div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="identifier">Identifier:</h5>
+                                            <input class="form-control" id="identifier" value="custom:" type="search" oninput="writeItem();">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="category">Category:</h5>
+                                            <select class="form-control" oninput="writeItem();" id="category">
+                                                <option selected>Items</option>
+                                                <option>Equipment</option>
+                                                <option>Food</option>
+                                                <option>Nature</option>
+                                                <option>Commands</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="is_experimental">Is experimental:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="is_experimental" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:icon">Texture path:</h5>
+                                            <input type="search" oninput="writeItem();" id="minecraft:icon" placeholder="textures/items/my_item" class="form-control">
+                                            <label class="text-dark" for="enable.item_atlas">Generate Item Atlas as well:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="enable.item_atlas" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group" id="item.atlas_div" style="display: none;">
+                                            <code>
+                                                <textarea spellcheck="false" id="item.atlas" rows="5" readonly class="form-control"></textarea>
+                                            </code>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:display_name">Display name:</h5>
+                                            <input class="form-control" id="minecraft:display_name" placeholder="Nice Item" type="search" oninput="writeItem();">
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:max_stack_size">Max stack size:</h5>
+                                            <input class="form-control" id="minecraft:max_stack_size" type="number" min="1" max="64" oninput="writeItem();">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:foil">Is enchanted:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:foil" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:use_animation">Use animation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:use_animation.checkbox" type="checkbox"></label>
+                                            <select oninput="writeItem();" class="form-control" id="minecraft:use_animation">
+                                                <option selected value="none">None</option>
+                                                <option value="bow">Bow</option>
+                                                <option value="camera">Camera</option>
+                                                <option value="eat">Eat</option>
+                                                <option value="drink">Drink</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:use_duration">Use duration:</h5>
+                                            <input type="number" min="1" placeholder="32" oninput="writeItem();" id="minecraft:use_duration" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:stacked_by_data">Stacked by data:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input checked class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:stacked_by_data" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:hand_equipped">Is hand equipped:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:hand_equipped" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:can_destroy_in_creative">Can destroy in creative:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:can_destroy_in_creative" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:creative_category">Creative category:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:creative_category.checkbox" type="checkbox"></label>
+                                            <select oninput="writeItem();" class="form-control" id="minecraft:creative_category">
+                                                <option value="none" selected>None</option>
+                                                <option value="itemGroup.name.door">Door</option>
+                                                <option value="itemGroup.name.sign">Sign</option>
+                                                <option value="itemGroup.name.anvil">Anvil</option>
+                                                <option value="itemGroup.name.crop">Crop</option>
+                                                <option value="itemGroup.name.armorStand">Armor Stand</option>
+                                                <option value="itemGroup.name.arrow">Arrow</option>
+                                                <option value="itemGroup.name.miscFood">Misc Food</option>
+                                                <option value="itemGroup.name.nature">Nature</option>
+                                                <option value="itemGroup.name.banner_pattern">Banner pattern</option>
+                                                <option value="itemGroup.name.items">Items</option>
+                                                <option value="itemGroup.name.rawFood">Raw Food</option>
+                                                <option value="itemGroup.name.boat">Boat</option>
+                                                <option value="itemGroup.name.seed">Seed</option>
+                                                <option value="itemGroup.name.blaze">Blaze</option>
+                                                <option value="itemGroup.name.natureMisc">Nature Misc</option>
+                                                <option value="itemGroup.name.book">Book</option>
+                                                <option value="itemGroup.name.bows">Bows</option>
+                                                <option value="itemGroup.name.bowl">Bowl</option>
+                                                <option value="itemGroup.name.craftingTables">Crafting Tables</option>
+                                                <option value="itemGroup.name.bricks">Bricks</option>
+                                                <option value="itemGroup.name.buckets">Buckets</option>
+                                                <option value="itemGroup.name.furnaces">Furnaces</option>
+                                                <option value="itemGroup.name.woolCarpet">Wool Carpet</option>
+                                                <option value="itemGroup.name.fishingRods">Fishing Rods</option>
+                                                <option value="itemGroup.name.cauldron">Cauldron</option>
+                                                <option value="itemGroup.name.boots">Boots</option>
+                                                <option value="itemGroup.name.chestplate">Chestplate</option>
+                                                <option value="itemGroup.name.helmet">Helmet</option>
+                                                <option value="itemGroup.name.leggings">Leggings</option>
+                                                <option value="itemGroup.name.minecart">Minecart</option>
+                                                <option value="itemGroup.name.natureBuildingBlocks">Nature building blocks</option>
+                                                <option value="itemGroup.name.clayBall">Clay ball</option>
+                                                <option value="itemGroup.name.coal">Coal</option>
+                                                <option value="itemGroup.name.walls">Walls</option>
+                                                <option value="itemGroup.name.redstoneProducers">Redstone Producers</option>
+                                                <option value="itemGroup.name.cookedFood">Cocked Food</option>
+                                                <option value="itemGroup.name.diamond">Diamond</option>
+                                                <option value="itemGroup.name.axe">Axe</option>
+                                                <option value="itemGroup.name.pickaxe">Pickaxe</option>
+                                                <option value="itemGroup.name.shovel">Shovel</option>
+                                                <option value="itemGroup.name.sword">Sword</option>
+                                                <option value="itemGroup.name.grass">Grass</option>
+                                                <option value="itemGroup.name.potionIngredients">Potion Ingredients</option>
+                                                <option value="itemGroup.name.elytra">Elytra</option>
+                                                <option value="itemGroup.name.emerald">Emerald</option>
+                                                <option value="itemGroup.name.navigation">Navigation</option>
+                                                <option value="itemGroup.name.enchantedBook">Enchanted Book</option>
+                                                <option value="itemGroup.name.endCrystal">End Crystal</option>
+                                                <option value="itemGroup.name.throwables">Throwables</option>
+                                                <option value="itemGroup.name.bottles">Bottles</option>
+                                                <option value="itemGroup.name.arrowComponents">Arrow Components</option>
+                                                <option value="itemGroup.name.fence">Fence</option>
+                                                <option value="itemGroup.name.fenceGate">Fence Gate</option>
+                                                <option value="itemGroup.name.fireCharge">Fire Charge</option>
+                                                <option value="itemGroup.name.tools">Tools</option>
+                                                <option value="itemGroup.name.decorations">Decorations</option>
+                                                <option value="itemGroup.name.ghastTear">Ghast Tear</option>
+                                                <option value="itemGroup.name.glowstone">Glowstone</option>
+                                                <option value="itemGroup.name.gold">Gold</option>
+                                                <option value="itemGroup.name.gunpowder">Gunpowder</option>
+                                                <option value="itemGroup.name.nautilus">Nautilus</option>
+                                                <option value="itemGroup.name.redstoneContainers">Redstone Containers</option>
+                                                <option value="itemGroup.name.horseArmor">Horse Armor</option>
+                                                <option value="itemGroup.name.coral_decorations">Coral Decorations</option>
+                                                <option value="itemGroup.name.nameTag">Nametag</option>
+                                                <option value="itemGroup.name.leather">Leather</option>
+                                                <option value="itemGroup.name.bricks">Bricks</option>
+                                                <option value="itemGroup.name.netherStar">Nether Star</option>
+                                                <option value="itemGroup.name.paper">Paper</option>
+                                                <option value="itemGroup.name.phantomMembrane">Phantom Membrane</option>
+                                                <option value="itemGroup.name.prismarineItems">Prismarine Items</option>
+                                                <option value="itemGroup.name.netherQuartz">Nether Quartz</option>
+                                                <option value="itemGroup.name.record">Record</option>
+                                                <option value="itemGroup.name.flower">Flower</option>
+                                                <option value="itemGroup.name.redstone">Redstone</option>
+                                                <option value="itemGroup.name.saddle">Saddle</option>
+                                                <option value="itemGroup.name.sapling">Sapling</option>
+                                                <option value="itemGroup.name.shield">Shield</option>
+                                                <option value="itemGroup.name.shulkerShell">Shulker Shell</option>
+                                                <option value="itemGroup.name.skull">Skull</option>
+                                                <option value="itemGroup.name.slimeBall">Slime Ball</option>
+                                                <option value="itemGroup.name.snowball">Snowball</option>
+                                                <option value="itemGroup.name.mobEgg">Mob Egg</option>
+                                                <option value="itemGroup.name.stick">Stick</option>
+                                                <option value="itemGroup.name.totem">Totem</option>
+                                                <option value="itemGroup.name.trident">Trident</option>
+                                                <option value="itemGroup.name.turtleHelmet">Turtle Helmet</option>
+                                                <option value="itemGroup.name.scute">Scute</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:food.checkbox">Is food:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:food.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:food.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:food.nutrition">Nutrition:</h5>
+                                                    <input type="number" class="form-control" id="minecraft:food.nutrition" oninput="writeItem();">
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:food.saturation_modifier">Saturation modifier:</h5>
+                                                    <select oninput="writeItem();" class="form-control" id="minecraft:food.saturation_modifier">
+                                                        <option selected value="low">Low</option>
+                                                        <option value="normal">Normal</option>
+                                                        <option value="good">Good</option>
+                                                        <option value="high">High</option>
+                                                        <option value="supernatural">Supernatural</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark" for="minecraft:food.can_always_eat">Can always eat:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:food.can_always_eat" type="checkbox"></label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:food.convert">Using converts to:</h5>
+                                                    <input class="form-control" id="minecraft:food.convert" oninput="writeItem();" type="search">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:explodable">Is explodeable:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:explodable" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:allow_off_hand">Allow in off hand:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:allow_off_hand" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:wearable.checkbox">Wearable:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:wearable.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:wearable.panel" class="form-group">
+                                                <h5 class="text-dark" for="minecraft:wearable.slot">Slot:</h5>
+                                                <select oninput="writeItem();" class="form-control" id="minecraft:wearable.slot">
+                                                    <option value="none" selected>None</option>
+                                                    <option value="slot.armor.head">Helmet</option>
+                                                    <option value="slot.armor.chest">Chestplate</option>
+                                                    <option value="slot.armor.legs">Leggings</option>
+                                                    <option value="slot.armor.feet">Boots</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:armor">Armor protection:</h5>
+                                            <input oninput="writeItem();" max="20" class="form-control" id="minecraft:armor" type="number">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:cooldown.checkbox">Cooldown:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:cooldown.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:cooldown.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:cooldown.category">Category:</h5>
+                                                    <input type="search" class="form-control" id="minecraft:cooldown.category" oninput="writeItem();">
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:cooldown.duration">Duration:</h5>
+                                                    <input type="number" class="form-control" id="minecraft:cooldown.duration" oninput="writeItem();">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 for="minecraft:damage" class="text-dark">Attack damage:</h5>
+                                            <input class="form-control" type="number" oninput="writeItem();" id="minecraft:damage">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:block_placer.checkbox">Place block:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:block_placer.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:block_placer.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:block_placer.block">Block to place:</h5>
+                                                    <input type="search" class="form-control" id="minecraft:block_placer.block" oninput="writeItem();">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark" for="minecraft:block_placer.block_description">Use block description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:block_placer.block_description" type="checkbox"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:entity_placer.checkbox">Place entity:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:entity_placer.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:entity_placer.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:entity_placer.entity">Entity to place:</h5>
+                                                    <input type="search" oninput="writeItem();" class="form-control" id="minecraft:entity_placer.entity">
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:entity_placer.use_on">Use on (Seperated by comma):</h5>
+                                                    <input type="search" oninput="writeItem();" class="form-control" id="minecraft:entity_placer.use_on">
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:entity_placer.dispense_on">Dispense on (Seperated by comma):</h5>
+                                                    <input type="search" oninput="writeItem();" class="form-control" id="minecraft:entity_placer.dispense_on">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:enchantable.checkbox">Enchantable:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:enchantable.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:enchantable.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:enchantable.slot">Slot:</h5>
+                                                    <select oninput="writeItem();" class="form-control" id="minecraft:enchantable.slot">
+                                                        <option value="none" selected>None</option>
+                                                        <option value="bow">Bow</option>
+                                                        <option value="armor_head">Head</option>
+                                                        <option value="armor_torso">Chestplate</option>
+                                                        <option value="armor_legs">Legging</option>
+                                                        <option value="armor_feet">Boot</option>
+                                                        <option value="hoe">Hoe</option>
+                                                        <option value="axe">Axe</option>
+                                                        <option value="pickaxe">Pickaxe</option>
+                                                        <option value="shovel">Shovel</option>
+                                                        <option value="sword">Sword</option>
+                                                        <option value="elytra">Elytra</option>
+                                                        <option value="fishing_rod">Fishing rod</option>
+                                                        <option value="flintsteel">Flint & Steel</option>
+                                                        <option value="shears">Shears</option>
+                                                        <option value="cosmetic_head">Cosmetic head</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:enchantable.value">Value:</h5>
+                                                    <input class="form-control" id="minecraft:enchantable.value" oninput="writeItem();" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:shooter.checkbox">Can shoot:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.checkbox" type="checkbox"></label>
+                                            <div id="minecraft:shooter.panel" class="border p-20 b-r-6">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:shooter.max_draw_duration">Max draw duration:</h5>
+                                                    <input type="number" min="1" oninput="writeItem();" class="form-control" id="minecraft:shooter.max_draw_duration">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark" for="minecraft:shooter.charge">Charge on draw:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.charge" type="checkbox"></label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark" for="minecraft:shooter.scale">Scale power by draw duration:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.scale" type="checkbox"></label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark" for="minecraft:shooter.ammo.checkbox">Add ammo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.ammo.checkbox" type="checkbox"></label>
+                                                    <div class="border p-20 b-r-6" id="minecraft:shooter.ammo.panel">
+                                                        <div class="form-group">
+                                                            <label class="text-dark" for="minecraft:shooter.inven">Search in inventory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.inven" type="checkbox"></label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <h5 class="text-dark" for="minecraft:shooter.item">Item to use as ammo:</h5>
+                                                            <input type="search" oninput="writeItem();" class="form-control" id="minecraft:shooter.item">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-dark" for="minecraft:shooter.offhand">Use offhand:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.offhand" type="checkbox"></label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-dark" for="minecraft:shooter.creative">Use in creative:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:shooter.creative" type="checkbox"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:fertilizer">Fertilizer duration:</h5>
+                                            <input class="form-control" id="minecraft:fertilizer" type="number" min="0" oninput="writeItem();">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:ignores_permission">Ignores permission:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:ignores_permission" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <h5 class="text-dark" for="minecraft:mining_speed">Mining speed:</h5>
+                                            <input class="form-control" id="minecraft:mining_speed" type="number" min="0" oninput="writeItem();">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:liquid_clipped">Liquid clipped:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:liquid_clipped" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:should_despawn">Should despawn:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:should_despawn" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:mirrored_art">Mirrored art:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:mirrored_art" type="checkbox"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:projectile.checkbox">Projectile:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:projectile.checkbox" type="checkbox"></label>
+                                            <div class="border p-20 b-r-6" id="minecraft:projectile.panel">
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:projectile.entity">Projectile entity:</h5>
+                                                    <input class="form-control" id="minecraft:projectile.entity" oninput="writeItem();" type="search">
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="text-dark" for="minecraft:projectile.power">Minimum critical power:</h5>
+                                                    <input class="form-control" id="minecraft:projectile.power" oninput="writeItem();" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-dark" for="minecraft:dye_powder">Dye powder:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:dye_powder.checkbox" type="checkbox"></label>
+                                            <select class="form-control" id="minecraft:dye_powder" oninput="writeItem();">
+                                                <option value="silver">Silver</option>
+                                                <option value="white">White</option>
+                                                <option value="purple">Purple</option>
+                                                <option value="blue">Blue</option>
+                                                <option value="green">Green</option>
+                                                <option value="magenta">Magenta</option>
+                                                <option value="black">Black</option>
+                                                <option value="pink">Pink</option>
+                                                <option value="cyan">Cyan</option>
+                                                <option value="lime">Lime</option>
+                                                <option value="yellow">Yellow</option>
+                                                <option value="brown">Brown</option>
+                                                <option value="lightblue">Light blue</option>
+                                                <option value="orange">Orange</option>
+                                                <option value="gray">Gray</option>
+                                                <option value="red">Red</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <div class="form-group">
+                                            <code>
+                                                <textarea spellcheck="false" readonly rows="18" id="item.code" class="form-control shadow"></textarea>
+                                            </code>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-sm btn-success" id="item.download">Download</button>
+                                            <button class="btn btn-sm btn-info" id="item.copy">Copy to clipboard</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- end: Body Inner -->
+        <!-- Scroll top -->
+        <a id="scrollTop"><i class="icon-chevron-up"></i><i class="icon-chevron-up"></i></a>
+        <div id="sidepanel">
+            <a class="panel-trigger"><span class="panel-close-x"><i class="icon-settings"></i></span></a>
+            <div class="container">
+                <p class="text-center">Set website preferences and they will be stored for your next visit.</p>
+                <hr class="mb-4">
+                <h5 class="mb-1">Color Scheme</h5>
+                <p class="small text-muted mb-3">Select light or dark mode.</p>
+                <div class="d-flex mb-4">
+                    <a id="light-mode" class="btn btn-light"><i class="icon-sun"></i> Light Mode</a>
+                    <a id="dark-mode" class="btn btn-dark"><i class="icon-moon"></i> Dark Mode</a>
+                </div>
+            </div>
+        </div>
+        <!--Plugins-->
+        <script src="assets/js/jquery.js"></script>
+        <script src="assets/js/plugins.js"></script>
+        <script src="assets/js/functions.js"></script>
+        <script src="assets/js/item-gen.js"></script>
+        <style>.dark .text-dark { color:#DADADA !important;};.dark .bg-color { background-color: #23272A; }; .bg-color { background-color: #DADADA; };.dark .card {background-color: #111!important; border-color: #111!important;box-shadow: 0 0 35px 0 #2b2a2a;}.dark .background-white {background-color: #111!important;border: 1px solid rgb(34, 34, 34);box-shadow: 0 0 0px 0 #111;}</style>
+    </body>
+</html>
