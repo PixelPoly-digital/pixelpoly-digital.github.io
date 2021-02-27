@@ -132,7 +132,7 @@ function writeItem() {
         item["minecraft:item"].components["minecraft:icon"].texture = `${identifier.value.split(":")[1].toLowerCase()}.texture`;
     };
     if (document.getElementById("enable.item_atlas").checked) {
-        if (icon.value !== "") {
+        if (icon.value !== "" && is_valid_identifier(identifier.value)) {
             let itemAtlas = {};
             itemAtlas.resource_pack_name = "vanilla",
             itemAtlas.texture_name = "atlas.items",
