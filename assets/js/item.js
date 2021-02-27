@@ -137,8 +137,8 @@ function writeItem() {
             itemAtlas.resource_pack_name = "vanilla",
             itemAtlas.texture_name = "atlas.items",
             itemAtlas.texture_data = {};
-            itemAtlas.texture_data[`${identifier.value.split(":")[1]}.texture`] = {};
-            itemAtlas.texture_data[`${identifier.value.split(":")[1]}.texture`].textures = icon.value;
+            itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`] = {};
+            itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`].textures = icon.value;
             document.getElementById("item.atlas").value = JSON.stringify(itemAtlas, null, 2);
         };
         document.getElementById("item.atlas_div").style.display = "block";
