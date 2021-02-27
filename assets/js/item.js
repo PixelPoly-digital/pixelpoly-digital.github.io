@@ -324,7 +324,7 @@ function writeItem() {
             if (shooterAmmoItem.value !== "") {
                 item["minecraft:item"].components["minecraft:shooter"].ammunition[0].item = shooterAmmoItem.value;
             };
-            item["minecraft:item"].components["minecraft:shooter"].ammunition[0].use_offhad = shooterAmmoHand.checked;
+            item["minecraft:item"].components["minecraft:shooter"].ammunition[0].use_offhand = shooterAmmoHand.checked;
             item["minecraft:item"].components["minecraft:shooter"].ammunition[0].use_in_creative = shooterAmmoCreative.checked;
         } else {
             shooterAmmoPanel.style.display = "none";
