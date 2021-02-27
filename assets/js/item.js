@@ -437,7 +437,7 @@ function writeItem() {
             type: 'text/plain'
         });
         let downloadLink = document.createElement("a");
-        downloadLink.download = `${identifier.value.split(":")[1]}.item.json`;
+        downloadLink.download = `${identifier.value.split(":")[1].toLowerCase()}.item.json`;
         downloadLink.innerHTML = "Save";
         if (window.webkitURL != null) {
             downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
