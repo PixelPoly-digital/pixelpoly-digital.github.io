@@ -132,13 +132,15 @@ function writeItem() {
         item["minecraft:item"].components["minecraft:icon"].texture = `${identifier.value.split(":")[1].toLowerCase()}.texture`;
     };
     if (document.getElementById("enable.item_atlas").checked) {
-        if (icon.value !== "" && is_valid_identifier(identifier.value)) {
+        if (icon.value !== "") {
             let itemAtlas = {};
             itemAtlas.resource_pack_name = "vanilla",
             itemAtlas.texture_name = "atlas.items",
             itemAtlas.texture_data = {};
-            itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`] = {};
-            itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`].textures = icon.value;
+            if (is_valid_identifier(identifier.value)) {
+                itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`] = {};
+                itemAtlas.texture_data[`${identifier.value.split(":")[1].toLowerCase()}.texture`].textures = icon.value;
+            };
             document.getElementById("item.atlas").value = JSON.stringify(itemAtlas, null, 2);
         };
         document.getElementById("item.atlas_div").style.display = "block";
@@ -466,16 +468,16 @@ function writeItem() {
 
         zip.file("resource/manifest.json", JSON.stringify(rp, null, 2));
         zip.file("behavior/manifest.json", JSON.stringify(bp, null, 2));
-        zip.file(`behavior/items/${identifier.value.split(":")[1]}.item.json`, code.value);
+        zip.file(`behavior/items/${identifier.value.split(":")[1].toLowerCase()}.item.json`, code.value);
         zip.file("resource/textures/item_texture.json", document.getElementById("item.atlas").value);
-        zip.file(`resource/${icon.value}.png`, itemIconFile.files[0]);
+        zip.file(`resource/${icon.value.toLowerCase()}.png`, itemIconFile.files[0]);
 
         downloadPack.onclick = function () {
             zip.generateAsync({
                 type: "blob"
             }).then(function (blob) {
                 if (identifier.value !== "") {
-                    saveAs(blob, `${identifier.value.split(":")[1]}.mcaddon`);
+                    saveAs(blob, `${identifier.value.split(":")[1].toLowerCase()}.mcaddon`);
                 } else {
                     saveAs(blob, "item.mcaddon");
                 };
@@ -487,7 +489,7 @@ function writeItem() {
         downloadPack.disabled = true;
     };
 
-    if ((identifier.value.split(":")[1] !== "" && identifier.value.split(":")[0] !== "") && (document.getElementById("item.atlas").value !== "" && icon.value !== "" && document.getElementById("enable.item_atlas").value !== "")) {
+    if (is_valid_identifier(identifier.value) && (identifier.value.split(":")[1] !== "" && identifier.value.split(":")[0] !== "") && (document.getElementById("item.atlas").value !== "" && icon.value !== "" && document.getElementById("enable.item_atlas").value !== "")) {
         document.getElementById("item.pack").disabled = false;
     } else {
         document.getElementById("item.pack").disabled = true;
