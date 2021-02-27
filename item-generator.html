@@ -95,7 +95,8 @@
                                     <div>
                                         <div class="form-group">
                                             <h5 class="text-dark" for="identifier">Identifier:</h5>
-                                            <input class="form-control" id="identifier" value="custom:" type="search" oninput="writeItem();">
+                                            <input class="form-control" id="identifier" value="custom:item" type="search" oninput="writeItem();">
+                                            <span class="is-invalid" id="invalid.identifier" style="display: none;">Invalid identifier!</span>
                                         </div>
                                         <div class="form-group">
                                             <h5 class="text-dark" for="category">Category:</h5>
@@ -105,6 +106,7 @@
                                                 <option>Food</option>
                                                 <option>Nature</option>
                                                 <option>Commands</option>
+                                                <option>None</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -253,7 +255,7 @@
                                             <div id="minecraft:food.panel" class="border p-20 b-r-6">
                                                 <div class="form-group">
                                                     <h5 class="text-dark" for="minecraft:food.nutrition">Nutrition:</h5>
-                                                    <input type="number" class="form-control" id="minecraft:food.nutrition" oninput="writeItem();">
+                                                    <input type="number" min="0" class="form-control" id="minecraft:food.nutrition" oninput="writeItem();">
                                                 </div>
                                                 <div class="form-group">
                                                     <h5 class="text-dark" for="minecraft:food.saturation_modifier">Saturation modifier:</h5>
@@ -295,7 +297,7 @@
                                         </div>
                                         <div class="form-group">
                                             <h5 class="text-dark" for="minecraft:armor">Armor protection:</h5>
-                                            <input oninput="writeItem();" max="20" class="form-control" id="minecraft:armor" type="number">
+                                            <input oninput="writeItem();" min="0" max="20" class="form-control" id="minecraft:armor" type="number">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-dark" for="minecraft:cooldown.checkbox">Cooldown:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:cooldown.checkbox" type="checkbox"></label>
@@ -306,13 +308,13 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <h5 class="text-dark" for="minecraft:cooldown.duration">Duration:</h5>
-                                                    <input type="number" class="form-control" id="minecraft:cooldown.duration" oninput="writeItem();">
+                                                    <input type="number" class="form-control" min="0" id="minecraft:cooldown.duration" oninput="writeItem();">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <h5 for="minecraft:damage" class="text-dark">Attack damage:</h5>
-                                            <input class="form-control" type="number" oninput="writeItem();" id="minecraft:damage">
+                                            <input class="form-control" type="number" min="0" oninput="writeItem();" id="minecraft:damage">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-dark" for="minecraft:block_placer.checkbox">Place block:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:block_placer.checkbox" type="checkbox"></label>
@@ -435,7 +437,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <h5 class="text-dark" for="minecraft:projectile.power">Minimum critical power:</h5>
-                                                    <input class="form-control" id="minecraft:projectile.power" oninput="writeItem();" type="number">
+                                                    <input class="form-control" id="minecraft:projectile.power" min="0" oninput="writeItem();" type="number">
                                                 </div>
                                             </div>
                                         </div>
@@ -468,7 +470,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <h5 class="text-dark" for="minecraft:throwable.draw">Max draw duration:</h5>
-                                                    <input class="form-control" id="minecraft:throwable.draw" oninput="writeItem();" type="number">
+                                                    <input class="form-control" id="minecraft:throwable.draw" min="0" oninput="writeItem();" type="number">
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="text-dark" for="minecraft:throwable.power">Scale power by draw duration:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeItem();" id="minecraft:throwable.power" type="checkbox"></label>
@@ -490,13 +492,13 @@
                                                     <h5 class="text-dark" for="minecraft:record.sound">Sound event:</h5>
                                                     <input class="form-control" id="minecraft:record.sound" oninput="writeItem();" type="search">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="text-dark">
                                                     <h5 class="text-dark" for="minecraft:record.duration">Duration:</h5>
-                                                    <input class="form-control" id="minecraft:record.duration" min="0" oninput="writeItem();" type="search">
+                                                    <input class="form-control" id="minecraft:record.duration" min="0" oninput="writeItem();" type="number">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="text-dark">
                                                     <h5 class="text-dark" for="minecraft:record.signal">Comparator signal:</h5>
-                                                    <input class="form-control" id="minecraft:record.signal" min="0" oninput="writeItem();" type="search">
+                                                    <input class="form-control" id="minecraft:record.signal" min="0" oninput="writeItem();" type="number">
                                                 </div>
                                             </div>
                                         </div>
