@@ -11,12 +11,12 @@
         <meta name="description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://tools.pixelpoly.co/manifest-generator">
+        <meta property="og:url" content="https://pixelpoly.co/creator-tools/manifest-generator">
         <meta property="og:title" content="Manifest generator | PixelPoly Digital">
         <meta property="og:description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://tools.pixelpoly.co/manifest-generator">
+        <meta property="twitter:url" content="https://pixelpoly.co/creator-tools/manifest-generator">
         <meta property="twitter:title" content="Manifest generator | PixelPoly Digital">
         <meta property="twitter:description" content="Pack Manifest generator for Minecraft Bedrock Edition, with this generator you can easily generate manifest for your Skin, Resource, or Behavior pack.">
         <!-- Favicons -->
@@ -33,6 +33,8 @@
         <link href="assets/css/plugins.css" rel="stylesheet">
         <link href="assets/css/style.css" rel="stylesheet">
         <script src="assets/js/lib/uuid_generator_class.js"></script>
+        <script src="assets/js/lib/filesaver.js"></script>
+	    <script src="assets/js/lib/jszip.js"></script> 
     </head>
     <body>
         <!-- Body Inner -->
@@ -52,23 +54,30 @@
                                         <option selected value="data">Behavior pack</option>
                                         <option value="resources">Resource pack</option>
                                         <option value="skin_pack">Skin pack</option>
+                                        <option value="scripts">Scripts</option>
                                         <option value="dep">Resource & behavior pack (Dependent)</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <!-- Soon
                         <div class="col-md-4">
                             <div>
                                 <div class="form-group">
                                     <h5>&nbsp;</h5>
-                                    <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options"><i class="icon-settings"></i> Options</button>
+                                    <button id="generate.pack" class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options">Generate pack</button>
                                 </div>
                             </div>
-                        </div> -->
-                        <div class="col-md-12">
-                            <div class="collapse" id="options">
-                                <div class="card card-body">
+                        </div>
+                        <div class="col-md-12 row collapse" id="options">
+                            <div class="col-md-8 center">
+                                <div class="card card-body background-white p-40">
+                                    <div class="form-group">
+                                        <h5>Select pack icon:</h5>
+                                        <input oninput="writeManifest();" class="col-12" id="pack.icon" type="file" accept=".png">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-dark" id="pack.downloadA">Download</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -100,13 +109,23 @@
                                             <h6 for="pack.metadata.checkbox">Enable metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="pack.metadata.checkbox" type="checkbox"></h6>
                                         </div>
                                         <div class="form-group" id="pack.author.element" style="display: none;">
-                                            <h5 class="text-dark">Author info (Optional):</h5>
+                                            <h5 class="text-dark">Author info:</h5>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <input oninput="writeManifest();" type="text" id="pack.author.name" placeholder="Name" class="form-control">
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <input oninput="writeManifest();" type="text" id="pack.author.url" placeholder="Website" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h6 for="pack.gametest.checkbox">Enable GameTest Module:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="pack.gametest.checkbox" type="checkbox"></h6>
+                                        </div>
+                                        <div class="form-group" id="pack.gametest.element" style="display: none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" value="modules/Main.js" id="pack.gametest.file" placeholder="entry file" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -152,7 +171,9 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
+                                            <h6 for="bp.enable.scripts.checkbox">Enable client script:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="bp.enable.scripts.checkbox" type="checkbox"></h6>
                                             <h6 for="bp.dep.metadata.checkbox">Enable behavior pack metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="bp.dep.metadata.checkbox" type="checkbox"></h6>
+                                            <h6 for="bp.gametest.checkbox">Enable GameTest Module:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="bp.gametest.checkbox" type="checkbox"></h6>
                                         </div>
                                         <div class="form-group" id="bp.dep.author.element" style="display: none;">
                                             <h5 class="text-dark">Author info (Optional):</h5>
@@ -162,6 +183,13 @@
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <input oninput="writeManifest();" type="text" id="bp.dep.author.url" placeholder="Website" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="bp.gametest.element" style="display: none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <input oninput="writeManifest();" type="text" value="modules/Main.js" id="bp.gametest.file" placeholder="entry file" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -197,6 +225,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
+                                            <h6 for="rp.enable.ui.checkbox">UI Capabilities:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="rp.enable.ui.checkbox" type="checkbox"></h6>
                                             <h6 for="rp.dep.metadata.checkbox">Enable resource pack metadata:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="form-check-input m-t-5" oninput="writeManifest();" id="rp.dep.metadata.checkbox" type="checkbox"></h6>
                                         </div>
                                         <div class="form-group" id="rp.dep.author.element" style="display: none;">
